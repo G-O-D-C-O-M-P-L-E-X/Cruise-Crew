@@ -1,11 +1,48 @@
 import { useCart } from '../context/CartContext'
 
-export default function BikeCard({ image, name, rent, rating }) {
+export default function BikeCard({ itemId, image, name, rating, rent, quantity }) {
   const { addToCart } = useCart() // Get the addToCart function from context
 
-  const handleAddToCart = () => {
-    addToCart({ image, name, rent, rating }) // Add bike details to cart
-  }
+  // const handleAddToCart = () => {
+  //   // addToCart({ image, name, rent, rating }) // Add bike details to cart
+    
+    
+  // }
+
+  const handleAddToCart = async () => {
+    console.log(itemId)
+    
+    try {
+      const token = localStorage.getItem("token"); // Ensure the user is authenticated
+      console.log(token);
+      if (!token) {
+        alert("Please log in to add items to the cart.");
+        return;
+      }
+  
+      const res = await fetch("http://localhost:5000/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Send token for authentication
+        },
+        body: JSON.stringify({ itemId, quantity}),
+      });
+
+      console.log(res)
+  
+      if (!res.ok) throw new Error("Failed to add item to cart");
+  
+      const updatedCart = await res.json();
+      console.log("Cart Updated:", updatedCart);
+      alert("Item added to cart!");
+  
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      alert("Could not add item. Please try again.");
+    }
+  };
+  
 
   return (
     <div className="w-full max-w-sm overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">

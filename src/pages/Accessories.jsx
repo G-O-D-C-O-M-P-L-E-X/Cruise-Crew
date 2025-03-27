@@ -12,9 +12,9 @@ const accessories = [
   { name: "Royal Enfield", image: g1, rentPerDay: 1500 },
   { name: "Yamaha R1", image: g3, rentPerDay: 1800 },
   { name: "Suzuki GSX-R1000", image: g5, rentPerDay: 2000 },
-  { name: "Royal Enfield", image: g1, rentPerDay: 1500 },
+  { name: "Royal Enfield", image: g2, rentPerDay: 1500 },
   { name: "Yamaha R1", image: g3, rentPerDay: 1800 },
-  { name: "Suzuki GSX-R1000", image: g5, rentPerDay: 2000 },
+  { name: "Suzuki GSX-R1000", image: g4, rentPerDay: 2000 },
 ];
 
 export default function Accessories() {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter } from "lucide-react";
+
 
 const footerLinks = [
   { name: "BIKES", link: "/bikes" },
@@ -37,17 +37,7 @@ export default function Footer() {
         {/* Social & Contact */}
         <div className="flex flex-col items-center md:items-start">
           <h2 className="font-bold mb-2">Connect with Us</h2>
-          <div className="flex space-x-4">
-            <a href="#" className="text-gray-400 hover:text-white transition">
-              <Facebook size={20} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white transition">
-              <Instagram size={20} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white transition">
-              <Twitter size={20} />
-            </a>
-          </div>
+          
           <p className="text-gray-400 mt-3">support@nirmitwagle.com</p>
         </div>
       </div>

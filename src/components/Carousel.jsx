@@ -11,22 +11,22 @@ const Carousel = () => {
     },
     {
       name: "KTM Duke 390",
-      image: "/sports/1.jpg",
+      image: "/sports/2.jpg",
       rentPerDay: 1200,
     },
     {
       name: "Harley Davidson",
-      image: "/sports/1.jpg",
+      image: "/sports/3.jpg",
       rentPerDay: 2500,
     },
     {
       name: "Yamaha R1",
-      image: "/sports/1.jpg",
+      image: "/sports/4.jpg",
       rentPerDay: 1800,
     },
     {
       name: "Honda CBR",
-      image: "/sports/1.jpg",
+      image: "/sports/5.jpg",
       rentPerDay: 1000,
     },
     {
@@ -36,7 +36,7 @@ const Carousel = () => {
     },
     {
       name: "BMW S1000RR",
-      image: "/sports/1.jpg",
+      image: "/sports/3.jpg",
       rentPerDay: 2200,
     },
   ];

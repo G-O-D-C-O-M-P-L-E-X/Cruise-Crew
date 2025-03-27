@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
 import BikeCard from "../components/BikeCard";
 import bg from "../../public/bg/bgfinall.jpg";
@@ -8,13 +8,6 @@ import s3 from "../../public/sports/3.jpg";
 import s4 from "../../public/sports/4.jpg";
 import s5 from "../../public/sports/5.png";
 
-const bikes = [
-  { name: "Royal Enfield", image: s1, rentPerDay: 1500 },
-  { name: "KTM Duke 390", image: s2, rentPerDay: 1200 },
-  { name: "Yamaha R1", image: s3, rentPerDay: 1800 },
-  { name: "Honda CBR", image: s4, rentPerDay: 1000 },
-  { name: "Suzuki GSX-R1000", image: s5, rentPerDay: 2000 },
-];
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,6 +16,7 @@ export default function App() {
   const [location, setLocation] = useState("");
   const [pickupDate, setPickupDate] = useState("");
   const [dropoffDate, setDropoffDate] = useState("");
+  const [bikes, setBikes] = useState([]);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLEMAPS_API_KEY,
@@ -30,6 +24,37 @@ export default function App() {
   });
 
   const searchBoxRef = useRef(null);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please log in to view your cart.");
+          return;
+        }
+
+        const res = await fetch("http://localhost:5000/api/items", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, //  Pass token for authentication
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch items");
+
+        const itemsData = await res.json(); 
+        console.log("Items Data:", itemsData); 
+
+        setBikes(itemsData);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+
+    fetchItems();
+  }, []);
 
   const onPlacesChanged = () => {
     const places = searchBoxRef.current.getPlaces();
@@ -46,17 +71,27 @@ export default function App() {
         bike.rentPerDay <= priceRange
     )
     .sort((a, b) =>
-      sortOrder === "lowToHigh" ? a.rentPerDay - b.rentPerDay : b.rentPerDay - a.rentPerDay
+      sortOrder === "lowToHigh"
+        ? a.rentPerDay - b.rentPerDay
+        : b.rentPerDay - a.rentPerDay
     );
+
+  console.log(filteredBikes);
 
   return (
     <div>
       <div className="relative justify-center flex flex-col w-full font-syne lg:h-screen">
-        <img className="relative lg:absolute w-full h-full object-cover" src={bg} alt="Background" />
+        <img
+          className="relative lg:absolute w-full h-full object-cover"
+          src={bg}
+          alt="Background"
+        />
         <div className="relative flex lg:bg-inherit text-slate-800 lg:ml-20 justify-center flex-col backdrop-blur-sm lg:text-white shadow-2xl p-8 rounded-lg lg:w-5/12">
           {/* Search for Bike */}
           <div className="mb-2">
-            <label className="block font-semibold mb-1">Get Your Bike Now</label>
+            <label className="block font-semibold mb-1">
+              Get Your Bike Now
+            </label>
             <input
               type="text"
               placeholder="Search for a bike..."
@@ -108,7 +143,9 @@ export default function App() {
           </div>
           {/* Price Range Filter */}
           <div className="mb-2">
-            <label className="block font-semibold mb-1">Price Range: Rs.{priceRange}</label>
+            <label className="block font-semibold mb-1">
+              Price Range: Rs.{priceRange}
+            </label>
             <input
               type="range"
               min="1000"
@@ -122,7 +159,9 @@ export default function App() {
           </div>
           {/* Sorting Options */}
           <div className="text-gray-700 mb-2">
-            <label className="block font-semibold text-white mb-1">Sort by Price</label>
+            <label className="block font-semibold text-white mb-1">
+              Sort by Price
+            </label>
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
@@ -142,7 +181,13 @@ export default function App() {
         <div className="flex flex-wrap justify-center">
           {filteredBikes.map((item, index) => (
             <div key={index} className="m-3">
-              <BikeCard name={item.name} rent={item.rentPerDay} image={item.image} />
+              <BikeCard
+                name={item.name}
+                itemId={item._id}
+                rent={item.rentPerDay}
+                image={item.image}
+                quantity={item.stock}
+              />
             </div>
           ))}
         </div>
@@ -150,4 +195,3 @@ export default function App() {
     </div>
   );
 }
-
